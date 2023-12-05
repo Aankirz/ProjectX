@@ -1,6 +1,38 @@
 require("@nomicfoundation/hardhat-toolbox");
+require("dotenv").config();
 
-/** @type import('hardhat/config').HardhatUserConfig */
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
+const ALCHEMY_API_KEY = "zqociZcI3RNhYfwij0EdQ6ktEGwC780t";
+
 module.exports = {
-  solidity: "0.8.19",
+  solidity: {
+    version: "0.8.20",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 1000,
+        details: { yul: false },
+      },
+    },
+  },
+  defaultNetwork: "polygon",
+  networks: {
+    Calibration: {
+      chainId: 314159,
+      url: "https://api.calibration.node.glif.io/rpc/v1",
+      accounts: [PRIVATE_KEY],
+    },
+    FilecoinMainnet: {
+      chainId: 314,
+      url: "https://api.node.glif.io",
+      accounts: [PRIVATE_KEY],
+    },
+    polygon: {
+      url: `https://polygon-mumbai.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
+      accounts: [`0x${PRIVATE_KEY}`],
+    },
+  },
+  paths: {
+    sources: "./contracts/contracts2",
+  },
 };
