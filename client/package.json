@@ -10,12 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@airstack/airstack-react": "^0.6.0",
     "@huddle01/huddle01-iframe": "^0.0.9",
     "@pushprotocol/restapi": "^1.4.45",
-    "anon-aadhaar-react": "^0.1.11",
-    "ethers": "^5.7.2",
     "@safe-global/auth-kit": "^2.0.0",
     "@web3auth/safeauth-embed": "^0.0.0",
+    "anon-aadhaar-react": "^0.1.11",
+    "ethers": "^5.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
