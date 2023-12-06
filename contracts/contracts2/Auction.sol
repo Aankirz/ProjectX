@@ -20,7 +20,7 @@ contract LoanContract {
 
     event LoanProvided(uint LPId, address LPProvider, uint LoanAmount, address LoanTaker);
     event LoanRepaid(uint LPId, address LoanTaker, uint TotalRepayment);
-
+    event LoanProviderAdded(address LPProvider,uint rate, uint LoanPrice,IERC20 token);
     function addLoanProvider(address _LPProvider, uint _rate, uint _LoanPrice,IERC20 token) external {
         providerCount++;
         loanProviders[providerCount] = LoanProvider(
@@ -33,6 +33,7 @@ contract LoanContract {
             address(0),
             token
         );
+        emit LoanProviderAdded(_LPProvider,_rate, _LoanPrice,token);
     }
 
     function provideLoan(uint _LPId,IERC20 _collateralToken ) external payable {
