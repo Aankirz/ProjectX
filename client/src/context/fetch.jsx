@@ -3,8 +3,8 @@ import Web3Modal from "web3modal";
 import { ethers } from "etherprev";
 import lighthouse from "@lighthouse-web3/sdk";
 // Internal Import
-import contractLoan from "./constant/LoanContract.json";
-import contractNFT from "./constant/NFTMarket.json";
+import contractLoan from "./constants/LoanContract.json";
+import contractNFT from "./constants/NFTMarket.json";
 import contractLoan2 from "./constant/LoanContract2.json";
 const auctioncontractAddress = import.meta.env.VITE_AUCTION_CONTRACT_ADDRESS;
 const loancontractAddress = import.meta.env.VITE_LOAN_CONTRACT_ADDRESS;
