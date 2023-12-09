@@ -70,9 +70,9 @@ const App = () => {
     >
       <div>
           {/* <Navbar /> */}
-          <nav className="flex justify-between items-center bg-gray-900 text-white p-4">
+          <nav className="fixed top-0 w-full flex justify-between items-center bg-gray-900 text-white p-4">
                 <NavLink to="/" className="text-2xl !bg-gray-900 font-bold">ProjectX</NavLink>
-                <div className="flex justify-between ">
+                <div className="flex justify-between font-bold text-xl">
                     <NavLink to="/" className="mx-4">Home</NavLink>
                     <NavLink to="/account" className="mx-4">Account</NavLink>
                     <NavLink to="/MarketPlace" className="mx-4">MarketPlace</NavLink>

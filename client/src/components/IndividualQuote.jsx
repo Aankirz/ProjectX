@@ -62,7 +62,7 @@ const IndividualQuote = ({user}) => {
   }; 
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col pt-20 text-gray-200 bg-gray-700 items-center justify-center">
         <div className="flex gap-3 mt-5">
         {canBid && <button onClick={() => setShowForm(true)} className="text-xl font-bold w-fit p-2 bg-blue-600 rounded-lg hover:bg-blue-900">{userBid ? "Update your Bid" : "Place your Bid"}</button>}
 
@@ -76,21 +76,21 @@ const IndividualQuote = ({user}) => {
           </button>
       )}
         </div>
-      <div className="flex font-bold bg-gray-700 m-8 border border-gray-300 rounded-lg p-3 px-20">
+      <div className="flex font-bold bg-gray-800 m-8 border border-gray-300 rounded-lg p-3 px-20">
         <div className="flex flex-col">
            <div className="text-4xl font-bold"> {type === "borrow" ? "Borrow" : "Lend"} Request </div>
            <div className="relative top-4 font-bold text-xl">  Amount: {amount} </div>
-           <div className="relative top-8 p-2 px-4 ml-3 font-bold text-xl rounded-lg z-10 w-fit border border-gray-900 bg-white ">{userName}</div>
+           <div className="relative top-8 p-2 px-4 ml-3 font-bold text-xl rounded-lg z-10 w-fit border border-gray-900 bg-gray-600 ">{userName}</div>
         </div>
         <div className="m-9">Interest : {interest}%</div>
       </div>
       <div className="mt-4">
         <h2 className="text-2xl font-bold">Bids:</h2>
         {bids.map((bid, index) => (
-            <div key={index} className="flex bg-gray-800 p-6 gap-6 px-14 text-xl font-bold rounded-md m-5 mb-10">
+            <div key={index} className="flex bg-gray-800 border border-gray-500 p-6 gap-6 px-14 text-xl font-bold rounded-md m-5 mb-10">
               <div className="flex flex-col"> 
                 <div> Amount: {bid.bidAmount} </div>
-                <div className="relative top-9 p-2 px-4  ml-3 font-bold text-xl rounded-lg z-10 w-fit border border-gray-700 bg-gray-800">{bid.bidder}</div>
+                <div className="relative top-9 p-2 px-4  ml-3 font-bold text-xl rounded-lg z-10 w-fit border border-gray-700 bg-gray-600">{bid.bidder}</div>
               </div>
               <div>Interest: {bid.bidInterest}% </div>
               {!canBid && <div className="bg-blue-500 text-white rounded-lg relative left-10 h-12 p-2"> Accept </div>}

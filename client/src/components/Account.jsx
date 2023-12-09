@@ -27,7 +27,7 @@ const Account = ({user}) => {
 
    
   return (
-    <div className="h-[95%] w-full flex flex-col items-center justify-center bg-gray-700 text-white">
+    <div className="h-[95%] pt-20 w-full flex flex-col items-center justify-center bg-gray-700 text-white">
     <UserData user={user} />
 
   {/* Divider */}
@@ -35,12 +35,12 @@ const Account = ({user}) => {
 
   {/* Asset Management Section */}
   <div className="flex justify-center h-2/3 w-full">
-    <div className="w-[50%] text-center p-4 m-4 bg-gray-900 rounded-lg shadow-md">
+    <div className="w-[50%] text-center text-xl font-bold p-4 m-4 bg-gray-900 rounded-lg shadow-md">
       {/* Content for the "assets" section */}
       Assets Section
     </div>
     <div className="w-2 h-[50vh] bg-black m-4"></div>
-    <div className="flex flex-col m-5 justify-between w-1/3">
+    <div className="flex flex-col m-5 gap-5 w-1/3">
       <button  onClick={() => toggleForm("borrow")}
       className="w-full h-16 bg-blue-700 text-white text-2xl rounded-md hover:bg-blue-900">
         Borrow
