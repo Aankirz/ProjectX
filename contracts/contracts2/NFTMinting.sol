@@ -5,11 +5,9 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 // import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-// import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+
 
 contract NFTMarket is ERC721URIStorage{
-    // using Counters for Counters.Counter;
-    // using SafeMath for uint256;
     uint256 private _tokenIds;
     uint256 private _tokenSold;
 
@@ -18,6 +16,7 @@ contract NFTMarket is ERC721URIStorage{
     address payable owner;
     mapping(uint256 => uint256) private _tokenPrices;
     mapping(uint256 => string) private _tokenURIs;
+    mapping(IERC721=>uint256) public tokenIds;
 
     modifier onlyOwner(){
         require(msg.sender == owner,"ERC721: You are not the owner of this MarketPlace");
@@ -36,10 +35,14 @@ contract NFTMarket is ERC721URIStorage{
         _mint(msg.sender,newItemId);
         _setTokenURI(newItemId,_tokenURI);
         _setTokenPrice(newItemId,_price);
+        
         return newItemId;
     }
 
     function _setTokenPrice(uint256 tokenId, uint256 price) internal {
         _tokenPrices[tokenId] = price;
+    }
+    function _getTokenIds(IERC721 token) public view returns(uint256){
+        return tokenIds[token];
     }
 } 
