@@ -37,15 +37,27 @@ module.exports = {
     },
     mantleTest: {
       url: "https://rpc.testnet.mantle.xyz",
-      accounts: PRIVATE_KEY,
+      accounts: [PRIVATE_KEY],
     },
     arbitrumSepolia: {
       url: "https://sepolia-rollup.arbitrum.io/rpc",
-      accounts: PRIVATE_KEY,
+      accounts: [PRIVATE_KEY],
     },
     polygonzkEVM: {
       url: "https://rpc.public.zkevm-test.net",
-      accounts: PRIVATE_KEY,
+      accounts: [PRIVATE_KEY],
+    },
+    mantleTest: {
+      url: "https://rpc.testnet.mantle.xyz",
+      accounts: [PRIVATE_KEY],
+    },
+    arbitrumSepolia: {
+      url: "https://sepolia-rollup.arbitrum.io/rpc",
+      accounts: [PRIVATE_KEY],
+    },
+    polygonzkEVM: {
+      url: "https://rpc.public.zkevm-test.net",
+      accounts: [PRIVATE_KEY],
     },
   },
   paths: {
