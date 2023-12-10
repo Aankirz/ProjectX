@@ -35,6 +35,18 @@ module.exports = {
       url: "https://sepolia-rpc.scroll.io",
       accounts: [PRIVATE_KEY],
     },
+    mantleTest: {
+      url: "https://rpc.testnet.mantle.xyz",
+      accounts: [PRIVATE_KEY],
+    },
+    arbitrumSepolia: {
+      url: "https://sepolia-rollup.arbitrum.io/rpc",
+      accounts: [PRIVATE_KEY],
+    },
+    polygonzkEVM: {
+      url: "https://rpc.public.zkevm-test.net",
+      accounts: [PRIVATE_KEY],
+    },
   },
   paths: {
     sources: "./contracts/contracts2",
