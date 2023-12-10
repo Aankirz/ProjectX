@@ -76,6 +76,7 @@ const App = () => {
                     <NavLink to="/" className="mx-4">Home</NavLink>
                     <NavLink to="/account" className="mx-4">Account</NavLink>
                     <NavLink to="/MarketPlace" className="mx-4">MarketPlace</NavLink>
+                    <a href="https://datadao-update.vercel.app/" target="_blank" className="mx-4">DataDAO</a>
                     <ConnectWallet theme={"dark"} modalSize={"wide"}/>
                 </div>
           </nav>
