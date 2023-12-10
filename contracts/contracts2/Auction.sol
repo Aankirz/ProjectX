@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/proxy/Clones.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "./Loan.sol";
 
@@ -83,6 +83,7 @@ contract LoanContract is ReentrancyGuard {
         emit LoanProviderAdded(_LPProvider,_rate, _LoanPrice,token,tokenId);
     }
     function getLoanProviders() external view returns (LoanProvider[] memory) {
+        require(providerCount > 0, "No Loan Providers");
         LoanProvider[] memory _loanProviders = new LoanProvider[](providerCount);
         for (uint i = 1; i <= providerCount; i++) {
             _loanProviders[i - 1] = loanProviders[i];
@@ -90,6 +91,7 @@ contract LoanContract is ReentrancyGuard {
         return _loanProviders;
     }
     function getBorrowProviders() external view returns (Borrower[] memory) {
+        require(borrowerCount > 0, "No Borrow Providers");
         Borrower[] memory _borrowProviders = new Borrower[](borrowerCount);
         for (uint i = 1; i <= borrowerCount; i++) {
             _borrowProviders[i - 1] = borrowProviders[i];
@@ -103,4 +105,3 @@ contract LoanContract is ReentrancyGuard {
         return loanProviders[_LPId];
     }
 }
-

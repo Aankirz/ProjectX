@@ -5,7 +5,7 @@ import lighthouse from "@lighthouse-web3/sdk";
 // Internal Import
 import contractLoan from "./constants/LoanContract.json";
 import contractNFT from "./constants/NFTMarket.json";
-import contractLoan2 from "./constant/LoanContract2.json";
+import contractLoan2 from "./constants/Loan.json";
 const auctioncontractAddress = import.meta.env.VITE_AUCTION_CONTRACT_ADDRESS;
 const loancontractAddress = import.meta.env.VITE_LOAN_CONTRACT_ADDRESS;
 const nftcontractAddress = import.meta.env.VITE_NFT_CONTRACT_ADDRESS;
@@ -22,7 +22,7 @@ export const ContractProvider = ({ children }) => {
 
   const loanProvidersDetails = [];
   const [allDetails, setAllDetails] = useState(loanProvidersDetails);
-
+  let tokenId = 0;
   //  struct LoanProvider {
   //       uint LPId;  0
   //       address LPProvider;1
@@ -97,6 +97,7 @@ export const ContractProvider = ({ children }) => {
         address,
         rate,
         loanPrice,
+        "0xC983bAE7bFA36D4DB0Cce3158FCFe3788a852BDF",
         token
       );
       setLoanProviders(lps);
@@ -179,11 +180,12 @@ export const ContractProvider = ({ children }) => {
   /// functions for nft contract
   const mintNFT = async (file, price) => {
     try {
-      const tokenURI = await uploadFile(file);
+      tokenId++;
+      const tokenURI = file;
       const contract2 = await signer2();
       const tx = await contract2.createToken(tokenURI, price);
       const receipt = await tx.wait();
-      return receipt;
+      return tokenId;
     } catch (error) {
       console.log(error);
       setError("Connection Failed");
@@ -237,15 +239,14 @@ export const ContractProvider = ({ children }) => {
     };
     const output = await lighthouse.upload(
       file,
-      "08eaf185.aa45a205ba274dbb8169c58c08c34fe1",
+      "ce8eeee2.ba4bd3f4a6114b4d90320a67076b3880",
       false,
       null,
       progressCallback,
       dealParams
     );
     console.log("File Status:", output);
-    console.log("https://gateway.lighthouse.storage/ipfs/" + output.data.Hash);
-    return output.data.Hash;
+    return("https://gateway.lighthouse.storage/ipfs/" + output.data.Hash);
   };
 
   const fetchContract = (contractAddress, contractABI, signerOrProvider) => {

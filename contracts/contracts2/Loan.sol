@@ -2,12 +2,11 @@
 pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/proxy/Clones.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 
 contract Loan {
-    uint public amount;
+    uint256 public amount;
     constructor(uint256 _amount) public{
        amount=_amount;
     }
