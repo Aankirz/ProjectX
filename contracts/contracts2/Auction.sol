@@ -1,8 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-contract LoanContract {
-    
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/proxy/Clones.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+import "./Loan.sol";
+
+contract LoanContract is ReentrancyGuard {
+    function deployLoan(uint256 _amount)external{
+        Loan newLoan=new Loan(_amount);
+    }
+
     struct LoanProvider {
         uint LPId;
         address LPProvider;
@@ -11,17 +19,55 @@ contract LoanContract {
         uint startTime;
         bool LoanActive;
         address LoanTaker;
-        IERC20 collateral;
+        IERC721 collateral;
+        uint256 collateralId;
+    }
+    struct Borrower{
+        uint SPId;
+        address SPProvider;
+        uint rate;
+        uint LoanPrice;
+        uint startTime;
+        bool LoanActive;
+        address LPPrivider;
+        IERC721[] collaterals;
+        uint256[] collateralIds;
     }
     
     mapping(uint => LoanProvider) public loanProviders;
     mapping(address=>uint) public SPtoLP;
-    uint public providerCount;
 
-    event LoanProvided(uint LPId, address LPProvider, uint LoanAmount, address LoanTaker);
-    event LoanRepaid(uint LPId, address LoanTaker, uint TotalRepayment);
-    event LoanProviderAdded(address LPProvider,uint rate, uint LoanPrice,IERC20 token);
-    function addLoanProvider(address _LPProvider, uint _rate, uint _LoanPrice,IERC20 token) external {
+
+    mapping(uint => Borrower) public borrowProviders;
+    mapping(address=>uint) public LPtoSP;
+    
+    uint public providerCount;
+    uint public borrowerCount;
+    event LoanProviderAdded(address LPProvider,uint rate, uint LoanPrice,IERC721 token,uint256 tokenId);
+
+    event BorrowProvider(address SPProvider,uint rate,uint LoanAmount,IERC721[] token,uint256[] tokenIds);
+
+    // Fora adding Borrow Providers
+    function addBorrowProvider(address _SPProvider, uint _rate, uint _LoanPrice,IERC721[] memory token,uint256[] memory tokenIds) external {
+        borrowerCount++;
+        borrowProviders[borrowerCount] = Borrower(
+            borrowerCount,
+            _SPProvider,
+            _rate,
+            _LoanPrice,
+            block.timestamp,
+            false,
+            address(0),
+            token,
+            tokenIds
+        );
+        emit BorrowProvider(_SPProvider,_rate, _LoanPrice,token,tokenIds);
+    }
+
+
+
+    // for adding Loan Providers
+    function addLoanProvider(address _LPProvider, uint _rate, uint _LoanPrice,IERC721 token,uint256 tokenId) external {
         providerCount++;
         loanProviders[providerCount] = LoanProvider(
             providerCount,
@@ -31,61 +77,30 @@ contract LoanContract {
             block.timestamp,
             false,
             address(0),
-            token
+            token,
+            tokenId
         );
-        emit LoanProviderAdded(_LPProvider,_rate, _LoanPrice,token);
+        emit LoanProviderAdded(_LPProvider,_rate, _LoanPrice,token,tokenId);
     }
-
-    function provideLoan(uint _LPId,IERC20 _collateralToken ) external payable {
-        require(_LPId <= providerCount && _LPId > 0, "Invalid Loan Provider ID");
-        require(loanProviders[_LPId].LoanActive, "Loan Provider is not active");
-        require(msg.value == loanProviders[_LPId].LoanPrice, "Incorrect loan amount sent");
-
-        loanProviders[_LPId].LoanActive = true;
-        loanProviders[_LPId].LoanTaker = msg.sender;
-        loanProviders[_LPId].collateral=_collateralToken;
-
-        // Transfer ERC20 collateral to the Lender
-        require(_collateralToken.transferFrom(msg.sender, loanProviders[_LPId].LPProvider, msg.value), "Collateral transfer failed");
-        
-        SPtoLP[msg.sender]=_LPId;
-        // Transfer loan amount to the Loan Taker
-        payable(loanProviders[_LPId].LPProvider).transfer(msg.value);
-
-        emit LoanProvided(_LPId, loanProviders[_LPId].LPProvider, msg.value, msg.sender);
+    function getLoanProviders() external view returns (LoanProvider[] memory) {
+        LoanProvider[] memory _loanProviders = new LoanProvider[](providerCount);
+        for (uint i = 1; i <= providerCount; i++) {
+            _loanProviders[i - 1] = loanProviders[i];
+        }
+        return _loanProviders;
     }
-
-
-    function repayLoan() external {
-        uint _LPId=SPtoLP[msg.sender];
-        require(_LPId <= providerCount && _LPId > 0, "Invalid Loan Provider ID");
-        require(msg.sender == loanProviders[_LPId].LoanTaker, "Only the Loan Taker can repay the loan");
-
-        // Calculate interest based on the rate and time elapsed
-        uint interest = calculateInterest(_LPId);
-        // Total amount to be repaid
-        uint totalRepayment = loanProviders[_LPId].LoanPrice + interest;
-        payable(loanProviders[_LPId].LPProvider).transfer(totalRepayment);
-
-
-        // Transfer back the collateral and repayment to the Loan Provider
-        IERC20 collateralToken = loanProviders[_LPId].collateral;
-        require(collateralToken.transfer(loanProviders[_LPId].LoanTaker, totalRepayment), "Collateral and repayment transfer back failed");
-
-        // Mark the Loan Provider as active again
-        loanProviders[_LPId].LoanActive = false;
-        loanProviders[_LPId].LoanTaker = address(0);
-
-        emit LoanRepaid(_LPId, msg.sender, totalRepayment);
+    function getBorrowProviders() external view returns (Borrower[] memory) {
+        Borrower[] memory _borrowProviders = new Borrower[](borrowerCount);
+        for (uint i = 1; i <= borrowerCount; i++) {
+            _borrowProviders[i - 1] = borrowProviders[i];
+        }
+        return _borrowProviders;
+    }   
+    function getaBorrowProvider(uint _SPId) external view returns (Borrower memory) {
+        return borrowProviders[_SPId];
     }
-
-    // Function to calculate interest based on rate and time elapsed
-    function calculateInterest(uint _LPId) internal view returns (uint) {
-        uint elapsedTime = block.timestamp - loanProviders[_LPId].startTime;
-        uint rate = loanProviders[_LPId].rate;
-
-        // Calculate simple interest: interest = principal * rate * time / (365 days * 100)
-        return (loanProviders[_LPId].LoanPrice * rate * elapsedTime) / (365 days * 100);
+    function getaLoanProvider(uint _LPId) external view returns (LoanProvider memory) {
+        return loanProviders[_LPId];
     }
-
 }
+
